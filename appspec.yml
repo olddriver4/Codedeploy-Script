@@ -1,0 +1,25 @@
+version: 0.0
+os: linux
+files:
+  - source: target
+    destination: /data/docker-compose/jar/.pull/
+hooks:
+  ApplicationStop:
+    - location: deploy/stop.sh
+      timeout: 300
+      runas: root
+  BeforeInstall:
+    - location: deploy/check.sh
+      timeout: 300
+      runas: root
+    - location: deploy/bak.sh
+      timeout: 300
+      runas: root
+  AfterInstall:
+    - location: deploy/install.sh
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: deploy/start.sh
+      timeout: 300
+      runas: root
