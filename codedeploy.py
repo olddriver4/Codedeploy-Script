@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 # auth limeng
 # Version python3+
-# Mode：pip3 install boto3 requests
+# Mode：pip3 install boto3 psutil requests
 
 import requests
 import threading
@@ -60,3 +60,70 @@ def create_deployment(FILE_NAME,APPNAME,DEPLOYNAME,BUCKET_NAME,PREFIX_NAME):
     
     print ("\nCodedeployMent 正在运行中...", flush=True)
 
+    response = client.create_deployment(
+        applicationName=APPNAME,
+        deploymentGroupName=DEPLOYNAME,
+        revision={
+            'revisionType': 'S3',
+            's3Location': {
+                'bucket': BUCKET_NAME,
+                'bundleType': 'zip',
+                'key': PREFIX_NAME + '/' + FILE_NAME
+                #'version': '2021-02-20_02',
+                #'eTag': '3f92baca7a92b4ebac6e3fc728999b3e'
+            }
+        },
+        deploymentConfigName='CodeDeployDefault.AllAtOnce',
+        description='string',
+        ignoreApplicationStopFailures=False,
+        autoRollbackConfiguration={
+            'enabled': True,
+            'events': [
+                'DEPLOYMENT_FAILURE',
+            ]
+        }
+    )
+
+#运行输入参数
+def run_string(APPNAME,DEPLOYNAME):
+    client = boto3.client(service_code, aws_access_key_id=access_key, aws_secret_access_key=secret_access_key, region_name=region)
+
+    while True:
+        time.sleep(20)
+
+        response = client.get_deployment_group(
+            applicationName=APPNAME,
+            deploymentGroupName=DEPLOYNAME
+        )
+
+        status=response['deploymentGroupInfo']['lastAttemptedDeployment']['status']
+
+        if status == 'Failed' or status == 'Stopped':
+            failed_logs="Codedeployment run status [%s], Program exit!" %(status)
+            print (failed_logs, flush=True)
+            sys.exit(1)
+
+        elif status == 'Succeeded':
+            succeeded_logs="Codedeployment run status [%s], Program exit!" %(status)
+            print (succeeded_logs, flush=True)
+            break
+            
+        else:
+            status_logs="Codedeployment runing status [%s] ..." %(status)
+            print (status_logs, flush=True)
+
+if __name__ == '__main__':
+    try:
+        upload_s3(FILE_NAME,FILE_PATH,BUCKET_NAME,PREFIX)
+        
+        try:
+            create_deployment(FILE_NAME,APPNAME,DEPLOYNAME,BUCKET_NAME,PREFIX_NAME)
+            run_string(APPNAME,DEPLOYNAME)
+        
+        except Exception as e:
+            print (e, flush=True)
+            sys.exit(1)
+            
+    except Exception as e:
+        print (e, flush=True)
+        sys.exit(1)
