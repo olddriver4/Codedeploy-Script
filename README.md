@@ -37,11 +37,11 @@ zip -r $FILE_NAME_ENV ./*
 /data/tool/codedeploy.py
 ```
 
->HOME：获取当前Jenkins需要打包上传的目录
-OLD_FILE_NAME_ENV：项目名
-FILE_NAME_ENV：项目包
-FILE_PATH_ENV：项目目录
-BUCKET_NAME_ENV：S3存储桶
-PREFIX_ENV：S3存储桶前缀
-APPNAME_ENV：Codedeploy 应用程序名
+>HOME：获取当前Jenkins需要打包上传的目录  
+OLD_FILE_NAME_ENV：项目名  
+FILE_NAME_ENV：项目包  
+FILE_PATH_ENV：项目目录  
+BUCKET_NAME_ENV：S3存储桶  
+PREFIX_ENV：S3存储桶前缀  
+APPNAME_ENV：Codedeploy 应用程序名  
 DEPLOYNAME_ENV：Codedeploy部署组名
