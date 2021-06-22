@@ -7,7 +7,6 @@
 - 打包zip压缩到S3 上传（根据Jenkins 定义的版本号变量命名）；
 - 上传到响应目录调用Codedeploy Json实现蓝绿部署。（其他部署自行更改脚本）
 
-# README.md
 #### 前提准备（蓝绿部署为例）
 - 定义好appspec.yml 以及deploy脚本 在代码仓库里封装
 - Jenkins使用version number 插件，响应Key如下：
